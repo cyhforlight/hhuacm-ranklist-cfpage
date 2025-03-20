@@ -1,113 +1,121 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import { GetStaticProps } from 'next';
+import UserTable from '../components/UserTable';
+import { User } from '../types';
+import Head from 'next/head';
+import { Inter } from 'next/font/google';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// 加载Inter字体
+const inter = Inter({
   subsets: ["latin"],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-inter',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+interface HomeProps {
+  users: User[];
+  lastUpdateTime: string;
+}
 
-export default function Home() {
+// 静态生成数据获取函数 - 适合CloudFlare Pages静态部署
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  try {
+    // 从环境变量获取数据URL
+    const dataUrl = process.env.DATA_URL || 'https://pub-aa454a05f68f49118cd8c7076f215be8.r2.dev/data.json';
+    
+    // 从指定URL获取数据
+    const response = await fetch(dataUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+    }
+    
+    // 获取最后修改时间
+    const lastModified = response.headers.get('last-modified');
+    let lastUpdateTime = '';
+    
+    if (lastModified) {
+      // 将HTTP日期格式转换为本地格式
+      lastUpdateTime = new Date(lastModified).toLocaleString('zh-CN', { 
+        timeZone: 'Asia/Shanghai',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } else {
+      // 如果无法获取最后修改时间，使用当前时间
+      lastUpdateTime = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
+    }
+    
+    const users = await response.json();
+    console.log(`Successfully fetched data, user count: ${users.length}`);
+    
+    return {
+      props: {
+        users,
+        lastUpdateTime
+      },
+      // 每小时重新生成页面
+      revalidate: 3600
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    
+    // 发生错误时返回空数组和错误信息
+    return {
+      props: {
+        users: [],
+        lastUpdateTime: '数据获取失败'
+      },
+      // 尝试10分钟后重新生成
+      revalidate: 600
+    };
+  }
+};
+
+// 主页面组件
+export default function Home({ users, lastUpdateTime }: HomeProps) {
+  // 页脚信息
+  const footerSection = (
+    <footer className="mt-16 text-center text-sm text-text-light border-t border-border pt-8 pb-6">
+      <p>数据来源: Codeforces API</p>
+      <p className="my-2">最后更新: {lastUpdateTime}</p>
+      <p className="text-xs mt-4">
+        总用户数量: {users.length} | HHU ACM队
+      </p>
+    </footer>
+  );
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    <>
+      <Head>
+        <title>河海大学ACM队 Codeforces 排行榜</title>
+        <meta name="description" content="河海大学ACM队成员在Codeforces的表现" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <div className={`${inter.className} min-h-screen flex flex-col`}>
+        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow max-w-7xl overflow-hidden">
+          <div className="mb-10 text-center">
+            <h1 className="text-4xl sm:text-5xl font-bold mb-4">河海大学ACM队 Codeforces 排行榜</h1>
+          </div>
+          
+          {users.length > 0 ? (
+            <div className="overflow-x-auto">
+              <UserTable initialUsers={users} />
+            </div>
+          ) : (
+            <div className="tech-card text-center py-16 mt-12">
+              <p className="text-xl text-red-600 dark:text-red-400">数据加载失败，请稍后再试</p>
+              <p className="mt-4 text-text-light">如果问题持续存在，请联系管理员</p>
+            </div>
+          )}
+          
+          {footerSection}
+        </main>
+      </div>
+    </>
   );
 }
