@@ -1,9 +1,9 @@
 /**
  * Get the CSS class for a Codeforces rating
  */
-export function getRatingColorClass(rating: number | null | string): string {
+export function getRatingColorClass(rating: number | null | string | undefined): string {
   if (rating === null || rating === undefined || rating === "—") {
-    return 'text-text-light';
+    return 'text-gray-500';
   }
   
   const numRating = typeof rating === 'string' ? parseInt(rating) : rating;

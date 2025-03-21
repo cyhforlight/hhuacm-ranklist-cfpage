@@ -197,7 +197,7 @@ export default function UserTable({ initialUsers }: UserTableProps) {
                       href={`https://codeforces.com/profile/${user.CFHandle}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`${user.CFinfo && user.CFinfo.rating ? getRatingColorClass(user.CFinfo.rating) : 'text-primary'} no-underline hover:opacity-80 transition-all mono-text font-semibold`}
+                      className={`${getRatingColorClass(user.CFinfo?.rating)} no-underline hover:opacity-80 transition-all mono-text font-semibold`}
                     >
                       {user.CFHandle}
                     </a>
