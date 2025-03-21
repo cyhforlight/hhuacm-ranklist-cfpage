@@ -203,10 +203,10 @@ export default function UserTable({ initialUsers }: UserTableProps) {
                     </a>
                   ) : '—'}
                 </td>
-                <td className={`py-3 px-4 ${user.CFinfo ? getRatingColorClass(user.CFinfo.rating) : ''} font-semibold mono-text`}>
+                <td className={`py-3 px-4 ${getRatingColorClass(user.CFinfo?.rating)} font-semibold mono-text`}>
                   {user.CFinfo?.rating ?? '—'}
                 </td>
-                <td className={`py-3 px-4 ${user.CFinfo ? getRatingColorClass(user.CFinfo.maxrating) : ''} font-semibold mono-text`}>
+                <td className={`py-3 px-4 ${getRatingColorClass(user.CFinfo?.maxrating)} font-semibold mono-text`}>
                   {user.CFinfo?.maxrating ?? '—'}
                 </td>
                 <td className="py-3 px-4 data-value">

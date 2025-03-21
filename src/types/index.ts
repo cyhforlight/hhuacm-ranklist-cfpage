@@ -15,4 +15,4 @@ export interface User {
   major: string | null;
   CFHandle: string | null;
   CFinfo: CFInfo | null;
-} 
+}

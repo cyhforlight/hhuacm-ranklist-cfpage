@@ -24,21 +24,17 @@ export default function Home() {
       try {
         // 数据URL
         const dataUrl = 'https://pub-aa454a05f68f49118cd8c7076f215be8.r2.dev/data.json';
-        
         // 从指定URL获取数据
         const response = await fetch(dataUrl);
-        
         if (!response.ok) {
           throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
         }
-        
         // 获取最后修改时间
         const lastModified = response.headers.get('last-modified');
         let updateTime = '';
-        
         if (lastModified) {
           // 将HTTP日期格式转换为本地格式
-          updateTime = new Date(lastModified).toLocaleString('zh-CN', { 
+          updateTime = new Date(lastModified).toLocaleString('zh-CN', {
             timeZone: 'Asia/Shanghai',
             year: 'numeric',
             month: '2-digit',
@@ -50,7 +46,7 @@ export default function Home() {
           // 如果无法获取最后修改时间，使用当前时间
           updateTime = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' });
         }
-        
+
         const userData = await response.json();
         setUsers(userData);
         setLastUpdateTime(updateTime);
@@ -69,9 +65,15 @@ export default function Home() {
   const footerSection = (
     <footer className="mt-16 text-center text-sm text-text-light border-t border-border pt-8 pb-6">
       <p>数据来源: Codeforces API</p>
-      <p className="my-2">最后更新: {lastUpdateTime}</p>
+      <p className="my-2">最后更新于: {lastUpdateTime}</p>
       <p className="text-xs mt-4">
         总用户数量: {users.length} | 河海大学 ACM 队
+      </p>
+      <p className="text-xs mt-4">
+        Written by ForLight in 2025
+      </p>
+      <p className="text-xs mt-4">
+        Built with: Next.js, Tailwind CSS, Cloudflare R2
       </p>
     </footer>
   );
@@ -89,7 +91,7 @@ export default function Home() {
           <div className="mb-24 text-center">
             <h1 className="text-4xl sm:text-5xl font-bold mb-4">河海大学ACM队 Codeforces 排行榜</h1>
           </div>
-          
+
           {isLoading ? (
             <div className="tech-card text-center py-16 mt-12">
               <p className="text-xl">数据加载中...</p>
@@ -109,7 +111,7 @@ export default function Home() {
               <p className="mt-4 text-text-light">如果问题持续存在，请联系管理员</p>
             </div>
           )}
-          
+
           {footerSection}
         </main>
       </div>

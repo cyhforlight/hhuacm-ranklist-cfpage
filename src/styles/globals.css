@@ -238,15 +238,13 @@ tr:hover {
 }
 
 /* CF颜色样式增强 */
-.text-gray-500 { color: #718096 !important; }
-.text-emerald-500 { color: #10b981 !important; } 
-.text-cyan-500 { color: #06b6d4 !important; }
-.text-blue-500 { color: #3b82f6 !important; }
-.text-violet-500 { color: #8b5cf6 !important; }
-.text-amber-500 { color: #f59e0b !important; }
-.text-amber-600 { color: #d97706 !important; }
-.text-rose-500 { color: #f43f5e !important; }
-.text-rose-600 { color: #e11d48 !important; }
+.CF_text-gray { color: #808080 !important; }
+.CF_text-green { color: #008000 !important; }
+.CF_text-cyan { color: #03A89E !important; }
+.CF_text-blue { color: #0000FF !important; }
+.CF_text-violet { color: #AA00AA !important; }
+.CF_text-orange { color: #FF8C00 !important; }
+.CF_text-red { color: #FF0000 !important; }
 
 /* 动画效果 */
 @keyframes fadeIn {
