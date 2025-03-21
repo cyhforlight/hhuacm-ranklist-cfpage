@@ -88,7 +88,8 @@ body {
   border-radius: 0.75rem;
   border: 1px solid var(--border);
   padding: 0.75rem 1.25rem;
-  margin-bottom: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
   box-shadow: 0 2px 10px -2px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(8px);
 }
@@ -164,70 +165,67 @@ th.cursor-pointer:hover {
   background-color: rgba(66, 153, 225, 0.05);
 }
 
-/* 新增排序图标样式 */
-th.active-sort-asc::after,
-th.active-sort-desc::after {
+/* 排序图标样式 */
+th.active-sort-asc,
+th.active-sort-desc {
+  background-color: rgba(66, 153, 225, 0.15);
+  color: var(--foreground);
+}
+
+th.cursor-pointer::after,
+th.cursor-pointer::before {
   content: '';
-  display: inline-block;
-  width: 0;
-  height: 0;
-  margin-left: 8px;
-  vertical-align: middle;
+  display: none;
 }
 
-th.active-sort-asc::after {
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-bottom: 5px solid var(--primary-dark);
-}
-
-th.active-sort-desc::after {
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid var(--primary-dark);
+th.cursor-pointer {
+  position: relative;
+  padding-right: 2rem;
 }
 
 th.cursor-pointer::after {
   content: '';
   display: inline-block;
-  width: 0;
-  height: 0;
-  margin-left: 8px;
-  vertical-align: middle;
-  opacity: 0.3;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-bottom: 4px solid var(--text-light);
-  position: relative;
-  top: -3px;
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M5 12l7-7 7 7'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.5;
 }
 
-th.cursor-pointer::before {
+th.active-sort-asc::after {
   content: '';
   display: inline-block;
-  width: 0;
-  height: 0;
-  margin-left: 8px;
-  vertical-align: middle;
-  opacity: 0.3;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid var(--text-light);
   position: absolute;
-  right: 12px;
-  top: calc(50% + 3px);
-}
-
-th.active-sort-asc::after,
-th.active-sort-asc::before,
-th.active-sort-desc::after,
-th.active-sort-desc::before {
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233182ce' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 19V5M5 12l7-7 7 7'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
   opacity: 1;
 }
 
-th.active-sort-asc::before,
 th.active-sort-desc::after {
-  opacity: 0;
+  content: '';
+  display: inline-block;
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233182ce' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v14M19 12l-7 7-7-7'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 1;
 }
 
 tr:nth-child(even) {
@@ -287,6 +285,33 @@ button.filter-btn {
   position: relative;
   overflow: hidden;
   border: 1px solid transparent;
+  margin-right: 0.5rem;
+}
+
+/* 红色重置按钮 */
+button.filter-btn.bg-red-50 {
+  background-color: rgba(254, 242, 242, 0.9);
+  color: #e53e3e;
+  border-color: rgba(229, 62, 62, 0.2);
+}
+
+button.filter-btn.bg-red-50:hover {
+  background-color: rgba(254, 242, 242, 1);
+  color: #c53030;
+  border-color: rgba(229, 62, 62, 0.3);
+}
+
+/* 非活跃用户样式 */
+.dormant-user {
+  color: #f87171;
+  font-weight: 500;
+}
+
+@media (prefers-color-scheme: dark) {
+  .dormant-user {
+    color: #ef4444;
+    opacity: 0.9;
+  }
 }
 
 button.filter-btn::before {
@@ -313,6 +338,29 @@ button.filter-btn.active {
   background: linear-gradient(135deg, var(--primary-dark), var(--primary));
   color: white;
   box-shadow: 0 4px 8px -2px rgba(49, 130, 206, 0.4);
+}
+
+/* 筛选标签样式 */
+.filter-label {
+  color: var(--foreground);
+  font-weight: 600;
+  font-size: 1.1rem;
+  position: relative;
+  padding-right: 1rem;
+  opacity: 0.85;
+  letter-spacing: 0.01em;
+}
+
+.filter-label::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 70%;
+  height: 2px;
+  background-color: var(--primary-light);
+  opacity: 0.5;
+  border-radius: 1px;
 }
 
 /* 标题样式改进 */

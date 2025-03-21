@@ -110,11 +110,12 @@ export default function UserTable({ initialUsers }: UserTableProps) {
 
   return (
     <>
-      {/* 筛选器组件 - 优化布局，左侧按钮，右侧统计 */}
+      {/* 筛选器组件 - 优化样式 */}
       {users.length > 0 && availableGrades.length > 0 && (
-        <div className="filter-container">
+        <div className="filter-container mb-16">
           <div className="flex flex-wrap justify-between items-center">
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex flex-wrap gap-2 items-center flex-1">
+              <span className="filter-label mr-3">年级筛选：</span>
               {availableGrades.map(grade => (
                 <button
                   key={grade}
@@ -128,27 +129,27 @@ export default function UserTable({ initialUsers }: UserTableProps) {
                   {grade}
                 </button>
               ))}
+            </div>
+            <div className="ml-4">
               {filters.grades.length > 0 && (
                 <button
                   onClick={resetFilters}
-                  className="filter-btn bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-300"
+                  className="filter-btn bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-300"
                 >
                   重置
                 </button>
               )}
             </div>
-            <div className="text-sm text-text-light">
-              显示: {displayedUsers.length} / {filteredAndSortedUsers.length} 位成员
-            </div>
           </div>
         </div>
       )}
 
-      {/* 用户表格 - 直接显示表格，不带外层div */}
+      {/* 用户表格 - 增加序号列 */}
       {users.length > 0 && (
         <table className="w-full table-auto">
           <thead>
             <tr>
+              <th className="py-3 px-4 text-center" style={{ width: "60px" }}>序号</th>
               <th className="py-3 px-4 text-center">姓名</th>
               <th className="py-3 px-4 text-center">年级</th>
               <th className="py-3 px-4 text-center">专业</th>
@@ -188,6 +189,7 @@ export default function UserTable({ initialUsers }: UserTableProps) {
           <tbody>
             {displayedUsers.map((user, index) => (
               <tr key={index} className="hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors">
+                <td className="py-3 px-4 font-medium text-center">{index + 1}</td>
                 <td className="py-3 px-4 font-medium">{user.name}</td>
                 <td className="py-3 px-4">{user.grade || '—'}</td>
                 <td className="py-3 px-4">{user.major || '—'}</td>
@@ -219,7 +221,7 @@ export default function UserTable({ initialUsers }: UserTableProps) {
                   {user.CFinfo?.lastOnlineTimeSeconds ? (
                     <span 
                       title={formatFullDate(user.CFinfo.lastOnlineTimeSeconds)}
-                      className={`${isDormant(user.CFinfo.lastOnlineTimeSeconds) ? 'text-red-500' : ''}`}
+                      className={`${isDormant(user.CFinfo.lastOnlineTimeSeconds) ? 'dormant-user' : ''}`}
                     >
                       {formatRelativeTime(user.CFinfo.lastOnlineTimeSeconds)}
                     </span>
@@ -231,7 +233,7 @@ export default function UserTable({ initialUsers }: UserTableProps) {
         </table>
       )}
 
-      {/* 加载更多按钮 */}
+      {/* 加载更多按钮 - 移除显示计数信息 */}
       {hasMoreUsers && (
         <div className="text-center mt-6 mb-8">
           <button 
@@ -240,9 +242,6 @@ export default function UserTable({ initialUsers }: UserTableProps) {
           >
             加载更多数据
           </button>
-          <p className="text-xs text-text-light mt-2">
-            当前显示 {displayedUsers.length} / {filteredAndSortedUsers.length} 条记录
-          </p>
         </div>
       )}
     </>

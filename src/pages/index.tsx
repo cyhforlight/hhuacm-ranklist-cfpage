@@ -71,7 +71,7 @@ export default function Home() {
       <p>数据来源: Codeforces API</p>
       <p className="my-2">最后更新: {lastUpdateTime}</p>
       <p className="text-xs mt-4">
-        总用户数量: {users.length} | HHU ACM队
+        总用户数量: {users.length} | 河海大学 ACM 队
       </p>
     </footer>
   );
@@ -86,7 +86,7 @@ export default function Home() {
       </Head>
       <div className={`${inter.className} min-h-screen flex flex-col`}>
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow max-w-7xl overflow-hidden">
-          <div className="mb-10 text-center">
+          <div className="mb-24 text-center">
             <h1 className="text-4xl sm:text-5xl font-bold mb-4">河海大学ACM队 Codeforces 排行榜</h1>
           </div>
           
