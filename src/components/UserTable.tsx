@@ -113,8 +113,8 @@ export default function UserTable({ initialUsers }: UserTableProps) {
       {/* 筛选器组件 - 优化样式 */}
       {users.length > 0 && availableGrades.length > 0 && (
         <div className="filter-container mb-16">
-          <div className="flex flex-wrap justify-between items-center">
-            <div className="flex flex-wrap gap-2 items-center flex-1">
+          <div className="flex flex-wrap justify-between items-center ">
+            <div className="flex flex-wrap gap-2 items-center ">
               <span className="filter-label mr-3">年级筛选：</span>
               {availableGrades.map(grade => (
                 <button
@@ -129,8 +129,6 @@ export default function UserTable({ initialUsers }: UserTableProps) {
                   {grade}
                 </button>
               ))}
-            </div>
-            <div className="ml-4">
               {filters.grades.length > 0 && (
                 <button
                   onClick={resetFilters}
@@ -236,7 +234,7 @@ export default function UserTable({ initialUsers }: UserTableProps) {
       {/* 加载更多按钮 - 移除显示计数信息 */}
       {hasMoreUsers && (
         <div className="text-center mt-6 mb-8">
-          <button 
+          <button
             onClick={() => setDisplayLimit(prev => prev + 50)}
             className="filter-btn bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300"
           >
