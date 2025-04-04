@@ -15,7 +15,7 @@
 
 ## 在线演示
 
-访问[河海大学ACM队 Codeforces 排行榜](https://your-demo-url.pages.dev)查看演示效果。
+访问[河海大学ACM队 Codeforces 排行榜](https://cfrank.forlight.top)查看演示效果。
 
 ## 技术栈
 
@@ -38,6 +38,8 @@ cd hhuacm-ranklist-cfpage
 ```bash
 pnpm install
 ```
+
+（开发者使用的是 Node.js v22.14.0，未验证过其他 JS 环境的可用性）。
 
 3. 创建环境变量文件
 创建 `.env.local` 文件，添加数据源URL：
@@ -128,6 +130,8 @@ DATA_URL=https://your-data-source-url.com/data.json
 
 3. 将数据源URL更新到 `.env.local` 文件中
 
+（提示：由于代码历史原因，暂不清楚代码的数据加载源究竟是环境变量，还是被写死在网页代码中，建议二次使用者顺便在代码里面搜索有关于 `data.json` 的相关部分，随后将链接替换为自己的将数据源URL）。
+
 ### 3. 自定义表格显示
 
 如果要修改表格显示的字段或排序规则，编辑 `src/components/UserTable.tsx`：
@@ -166,8 +170,6 @@ DATA_URL=https://your-data-source-url.com/data.json
    添加两个环境变量：
    - `DATA_URL` = 你的数据源URL
    - `NODE_VERSION` = 22.14.0
-
-   ![环境变量配置](/images/env-vars-example.png)
 
 5. **保存并部署**
 
