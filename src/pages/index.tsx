@@ -31,7 +31,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={`${inter.className} min-h-screen flex flex-col`}>
-        <main className="ranklist-container mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow max-w-7xl overflow-hidden">
+        <main className="ranklist-container flex-grow overflow-hidden pb-10 pt-12 sm:pt-14">
           <RanklistHeader title={SITE_TITLE} />
 
           {isLoading ? (

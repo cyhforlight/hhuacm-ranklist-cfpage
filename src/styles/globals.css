@@ -61,12 +61,12 @@ body {
   max-width: 90rem;
   width: 100%;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding-inline: 1rem;
 }
 
 @media (min-width: 640px) {
   .ranklist-container {
-    padding: 0 2rem;
+    padding-inline: 2rem;
   }
 }
 
