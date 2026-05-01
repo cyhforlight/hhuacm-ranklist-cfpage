@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DISPLAY_INCREMENT, INITIAL_DISPLAY_LIMIT } from '../config/ranklist';
 import { RankUser, SortableCodeforcesField, SortOrder } from '../types';
 
-interface RanklistSort {
+export interface RanklistSort {
   key: SortableCodeforcesField;
   order: SortOrder;
 }
@@ -68,6 +68,10 @@ export function useRanklistTable(users: RankUser[]) {
   }, [filteredAndSortedUsers.length]);
 
   useEffect(() => {
+    setDisplayLimit(INITIAL_DISPLAY_LIMIT);
+  }, [users]);
+
+  useEffect(() => {
     const handleLoadMore = () => {
       const isNearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
       if (!isNearBottom) return;
@@ -84,26 +88,25 @@ export function useRanklistTable(users: RankUser[]) {
   }, [loadMore]);
 
   const sortBy = useCallback((key: SortableCodeforcesField) => {
+    setDisplayLimit(INITIAL_DISPLAY_LIMIT);
     setSort(prev => ({
       key,
       order: prev.key === key && prev.order === 'desc' ? 'asc' : 'desc',
     }));
   }, []);
 
-  const getSortClass = useCallback(
-    (key: SortableCodeforcesField) => {
-      if (sort.key !== key) return '';
-
-      return sort.order === 'asc' ? 'active-sort-asc' : 'active-sort-desc';
-    },
+  const getSortOrder = useCallback(
+    (key: SortableCodeforcesField) => (sort.key === key ? sort.order : null),
     [sort.key, sort.order],
   );
 
   const resetFilters = useCallback(() => {
+    setDisplayLimit(INITIAL_DISPLAY_LIMIT);
     setSelectedGrades([]);
   }, []);
 
   const toggleGradeFilter = useCallback((grade: string) => {
+    setDisplayLimit(INITIAL_DISPLAY_LIMIT);
     setSelectedGrades(prev => (
       prev.includes(grade)
         ? prev.filter(selectedGrade => selectedGrade !== grade)
@@ -114,11 +117,12 @@ export function useRanklistTable(users: RankUser[]) {
   return {
     availableGrades,
     displayedUsers,
-    getSortClass,
+    getSortOrder,
     hasMoreUsers,
     loadMore,
     resetFilters,
     selectedGrades,
+    sort,
     sortBy,
     toggleGradeFilter,
   };

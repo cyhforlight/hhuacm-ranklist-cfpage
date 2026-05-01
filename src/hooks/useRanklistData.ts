@@ -32,11 +32,11 @@ export function useRanklistData(dataUrl = DATA_URL): RanklistDataState {
   });
 
   useEffect(() => {
-    let isMounted = true;
+    const controller = new AbortController();
 
     async function fetchData() {
       try {
-        const response = await fetch(dataUrl);
+        const response = await fetch(dataUrl, { signal: controller.signal });
         if (!response.ok) {
           throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
         }
@@ -45,7 +45,7 @@ export function useRanklistData(dataUrl = DATA_URL): RanklistDataState {
         const users = normalizeRankUsers(payload);
         const lastUpdateTime = formatUpdateTime(response.headers.get('last-modified'));
 
-        if (!isMounted) return;
+        if (controller.signal.aborted) return;
 
         setState({
           users,
@@ -54,9 +54,9 @@ export function useRanklistData(dataUrl = DATA_URL): RanklistDataState {
           error: null,
         });
       } catch (error) {
-        console.error('Error fetching ranklist data:', error);
+        if (controller.signal.aborted) return;
 
-        if (!isMounted) return;
+        console.error('Error fetching ranklist data:', error);
 
         setState({
           users: [],
@@ -70,7 +70,7 @@ export function useRanklistData(dataUrl = DATA_URL): RanklistDataState {
     fetchData();
 
     return () => {
-      isMounted = false;
+      controller.abort();
     };
   }, [dataUrl]);
 
