@@ -1,117 +1,49 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { User } from '../types';
+import type { CSSProperties } from 'react';
+import { getUserRowKey, useRanklistTable } from '../hooks/useRanklistTable';
+import { RankUser, SortableCodeforcesField } from '../types';
 import { formatRelativeTime, formatFullDate, isDormant } from '../utils/dateUtils';
 import { getRatingColorClass } from '../utils/cfUtils';
 
 interface UserTableProps {
-  initialUsers: User[];
+  initialUsers: RankUser[];
 }
 
+interface TableColumn {
+  label: string;
+  sortKey?: SortableCodeforcesField;
+  className?: string;
+  style?: CSSProperties;
+}
+
+const TABLE_COLUMNS: TableColumn[] = [
+  { label: '序号', className: 'py-3 px-4 text-center', style: { width: '60px' } },
+  { label: '姓名', className: 'py-3 px-4 text-center' },
+  { label: '年级', className: 'py-3 px-4 text-center' },
+  { label: '专业', className: 'py-3 px-4 text-center' },
+  { label: 'CF账号', className: 'py-3 px-4 text-center' },
+  { label: 'Rating', sortKey: 'rating', className: 'py-3 px-4 text-center' },
+  { label: '历史最高Rating', sortKey: 'maxrating', className: 'py-3 px-4 text-center' },
+  { label: 'AC题数', sortKey: 'acceptedProblemCount', className: 'py-3 px-4 text-center' },
+  { label: '1个月内AC题数', sortKey: 'acceptedProblemCountinMonth', className: 'py-3 px-4 text-center' },
+  { label: '最近活跃时间', sortKey: 'lastOnlineTimeSeconds', className: 'py-3 px-4 text-center' },
+];
+
 export default function UserTable({ initialUsers }: UserTableProps) {
-  const [users] = useState<User[]>(initialUsers);
-  const [filters, setFilters] = useState<{ grades: string[] }>({ grades: [] });
-  const [sort, setSort] = useState<{ key: string; order: 'asc' | 'desc' }>({
-    key: 'rating',
-    order: 'desc'
-  });
-  const [displayLimit, setDisplayLimit] = useState<number>(50); // 增加显示限制状态
-
-  // 应对显示更多数据
-  useEffect(() => {
-    const handleLoadMore = () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
-        setDisplayLimit(prev => prev + 50);
-      }
-    };
-
-    window.addEventListener('scroll', handleLoadMore);
-    return () => window.removeEventListener('scroll', handleLoadMore);
-  }, []);
-
-  // 排序
-  const sortBy = (key: string) => {
-    setSort(prev => ({
-      key,
-      order: prev.key === key && prev.order === 'desc' ? 'asc' : 'desc'
-    }));
-  };
-
-  // 获取排序图标样式
-  const getSortClass = (key: string) => {
-    const isActive = sort.key === key;
-    
-    if (!isActive) return '';
-    
-    return sort.order === 'asc' ? 'active-sort-asc' : 'active-sort-desc';
-  };
-
-  // 重置筛选
-  const resetFilters = () => {
-    setFilters({ grades: [] });
-  };
-
-  // 切换年级筛选
-  const toggleGradeFilter = (grade: string) => {
-    setFilters(prev => {
-      if (prev.grades.includes(grade)) {
-        return { ...prev, grades: prev.grades.filter(g => g !== grade) };
-      } else {
-        return { ...prev, grades: [...prev.grades, grade] };
-      }
-    });
-  };
-
-  // 获取可用年级
-  const availableGrades = Array.from(
-    new Set(users.filter(user => user.grade && user.grade !== '—').map(user => user.grade as string))
-  ).sort();
-
-  // 筛选和排序用户
-  const filteredAndSortedUsers = (() => {
-    // 先筛选
-    let result = [...users];
-    if (filters.grades.length > 0) {
-      result = result.filter(user => user.grade && filters.grades.includes(user.grade));
-    }
-
-    // 再排序
-    if (sort.key) {
-      const key = sort.key;
-      const order = sort.order;
-
-      result.sort((a, b) => {
-        const aValue = a.CFinfo ? a.CFinfo[key as keyof typeof a.CFinfo] : null;
-        const bValue = b.CFinfo ? b.CFinfo[key as keyof typeof b.CFinfo] : null;
-
-        // 处理空值
-        const aIsEmpty = aValue === null || aValue === '—' || aValue === undefined;
-        const bIsEmpty = bValue === null || bValue === '—' || bValue === undefined;
-
-        // 空值排到最后
-        if (aIsEmpty && bIsEmpty) return 0;
-        if (aIsEmpty) return 1;
-        if (bIsEmpty) return -1;
-
-        // 比较值
-        if (aValue! < bValue!) return order === 'asc' ? -1 : 1;
-        if (aValue! > bValue!) return order === 'asc' ? 1 : -1;
-        return 0;
-      });
-    }
-
-    return result;
-  })();
-
-  // 限制显示的用户数量
-  const displayedUsers = filteredAndSortedUsers.slice(0, displayLimit);
-  const hasMoreUsers = filteredAndSortedUsers.length > displayedUsers.length;
+  const {
+    availableGrades,
+    displayedUsers,
+    hasMoreUsers,
+    loadMore,
+    getSortClass,
+    resetFilters,
+    selectedGrades,
+    sortBy,
+    toggleGradeFilter,
+  } = useRanklistTable(initialUsers);
 
   return (
     <>
-      {/* 筛选器组件 - 优化样式 */}
-      {users.length > 0 && availableGrades.length > 0 && (
+      {initialUsers.length > 0 && availableGrades.length > 0 && (
         <div className="filter-container mb-16">
           <div className="flex flex-wrap justify-between items-center ">
             <div className="flex flex-wrap gap-2 items-center ">
@@ -121,7 +53,7 @@ export default function UserTable({ initialUsers }: UserTableProps) {
                   key={grade}
                   onClick={() => toggleGradeFilter(grade)}
                   className={`filter-btn ${
-                    filters.grades.includes(grade)
+                    selectedGrades.includes(grade)
                       ? 'active'
                       : 'bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300'
                   }`}
@@ -129,7 +61,7 @@ export default function UserTable({ initialUsers }: UserTableProps) {
                   {grade}
                 </button>
               ))}
-              {filters.grades.length > 0 && (
+              {selectedGrades.length > 0 && (
                 <button
                   onClick={resetFilters}
                   className="filter-btn bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-300"
@@ -142,51 +74,31 @@ export default function UserTable({ initialUsers }: UserTableProps) {
         </div>
       )}
 
-      {/* 用户表格 - 增加序号列 */}
-      {users.length > 0 && (
-        <table className="w-full table-auto">
+      {initialUsers.length > 0 && (
+        <table className="ranklist-table w-full table-auto">
           <thead>
             <tr>
-              <th className="py-3 px-4 text-center" style={{ width: "60px" }}>序号</th>
-              <th className="py-3 px-4 text-center">姓名</th>
-              <th className="py-3 px-4 text-center">年级</th>
-              <th className="py-3 px-4 text-center">专业</th>
-              <th className="py-3 px-4 text-center">CF账号</th>
-              <th 
-                className={`cursor-pointer py-3 px-4 text-center ${getSortClass('rating')}`}
-                onClick={() => sortBy('rating')}
-              >
-                Rating
-              </th>
-              <th 
-                className={`cursor-pointer py-3 px-4 text-center ${getSortClass('maxrating')}`}
-                onClick={() => sortBy('maxrating')}
-              >
-                历史最高Rating
-              </th>
-              <th 
-                className={`cursor-pointer py-3 px-4 text-center ${getSortClass('acceptedProblemCount')}`}
-                onClick={() => sortBy('acceptedProblemCount')}
-              >
-                AC题数
-              </th>
-              <th 
-                className={`cursor-pointer py-3 px-4 text-center ${getSortClass('acceptedProblemCountinMonth')}`}
-                onClick={() => sortBy('acceptedProblemCountinMonth')}
-              >
-                1个月内AC题数
-              </th>
-              <th 
-                className={`cursor-pointer py-3 px-4 text-center ${getSortClass('lastOnlineTimeSeconds')}`}
-                onClick={() => sortBy('lastOnlineTimeSeconds')}
-              >
-                最近活跃时间
-              </th>
+              {TABLE_COLUMNS.map(column => {
+                const sortKey = column.sortKey;
+
+                return (
+                  <th
+                    key={column.label}
+                    className={`${column.className ?? ''} ${
+                      sortKey ? `cursor-pointer ${getSortClass(sortKey)}` : ''
+                    }`}
+                    onClick={sortKey ? () => sortBy(sortKey) : undefined}
+                    style={column.style}
+                  >
+                    {column.label}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
             {displayedUsers.map((user, index) => (
-              <tr key={index} className="hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors">
+              <tr key={getUserRowKey(user, index)} className="hover:bg-blue-50/30 dark:hover:bg-blue-900/10 transition-colors">
                 <td className="py-3 px-4 font-medium text-center">{index + 1}</td>
                 <td className="py-3 px-4 font-medium">{user.name}</td>
                 <td className="py-3 px-4">{user.grade || '—'}</td>
@@ -231,11 +143,10 @@ export default function UserTable({ initialUsers }: UserTableProps) {
         </table>
       )}
 
-      {/* 加载更多按钮 - 移除显示计数信息 */}
       {hasMoreUsers && (
         <div className="text-center mt-6 mb-8">
           <button
-            onClick={() => setDisplayLimit(prev => prev + 50)}
+            onClick={loadMore}
             className="filter-btn bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300"
           >
             加载更多数据

@@ -6,6 +6,8 @@ export function getRatingColorClass(rating: number | null | string | undefined):
     return 'CF_text-gray';
   }
   const numRating = typeof rating === 'string' ? parseInt(rating) : rating;
+  if (!Number.isFinite(numRating)) return 'CF_text-gray';
+
   if (numRating < 1200) return 'CF_text-gray';  // Newbie (gray)
   if (numRating < 1400) return 'CF_text-green'; // Pupil (green)
   if (numRating < 1600) return 'CF_text-cyan';  // Specialist (cyan)

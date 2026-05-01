@@ -1,18 +1,28 @@
-// Codeforces user information type
-export interface CFInfo {
+export type SortOrder = 'asc' | 'desc';
+
+export type SortableCodeforcesField =
+  | 'rating'
+  | 'maxrating'
+  | 'acceptedProblemCount'
+  | 'acceptedProblemCountinMonth'
+  | 'lastOnlineTimeSeconds';
+
+export interface CodeforcesInfo {
   handle: string;
   rating: number | null;
   maxrating: number | null;
-  lastOnlineTimeSeconds: number;
-  acceptedProblemCount: number;
-  acceptedProblemCountinMonth: number;
+  acceptedProblemCount: number | null;
+  acceptedProblemCountinMonth: number | null;
+  lastOnlineTimeSeconds: number | null;
 }
 
-// User type
-export interface User {
+export interface RankUser {
   name: string;
   grade: string | null;
   major: string | null;
   CFHandle: string | null;
-  CFinfo: CFInfo | null;
+  CFinfo: CodeforcesInfo | null;
 }
+
+export type CFInfo = CodeforcesInfo;
+export type User = RankUser;
