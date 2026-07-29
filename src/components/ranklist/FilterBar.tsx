@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/Button';
-import { FilterChip } from './FilterChip';
 
 interface FilterBarProps {
   availableGrades: string[];
@@ -26,12 +25,14 @@ export function FilterBar({
           年级筛选：
         </span>
         {availableGrades.map(grade => (
-          <FilterChip
+          <Button
+            aria-pressed={selectedGrades.includes(grade)}
             key={grade}
-            grade={grade}
-            isSelected={selectedGrades.includes(grade)}
-            onToggle={onToggleGrade}
-          />
+            onClick={() => onToggleGrade(grade)}
+            variant={selectedGrades.includes(grade) ? 'primary' : 'subtle'}
+          >
+            {grade}
+          </Button>
         ))}
         {selectedGrades.length > 0 && (
           <Button onClick={onReset} variant="danger">

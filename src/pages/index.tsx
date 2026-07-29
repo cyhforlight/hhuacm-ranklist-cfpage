@@ -1,6 +1,5 @@
 import UserTable from '../components/UserTable';
 import { RanklistFooter } from '@/components/ranklist/RanklistFooter';
-import { RanklistHeader } from '@/components/ranklist/RanklistHeader';
 import { StatusCard } from '@/components/ui/StatusCard';
 import {
   AUTHOR_TEXT,
@@ -16,7 +15,6 @@ const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   display: 'swap',
-  variable: '--font-inter',
 });
 
 export default function Home() {
@@ -32,7 +30,11 @@ export default function Home() {
       </Head>
       <div className={`${inter.className} min-h-screen flex flex-col`}>
         <main className="ranklist-container flex-grow overflow-hidden pb-10 pt-12 sm:pt-14">
-          <RanklistHeader title={SITE_TITLE} />
+          <header className="mb-10 text-center sm:mb-12">
+            <h1 className="bg-gradient-to-br from-primary-dark to-primary-light bg-clip-text text-4xl font-bold tracking-normal text-transparent sm:text-5xl">
+              {SITE_TITLE}
+            </h1>
+          </header>
 
           {isLoading ? (
             <StatusCard>

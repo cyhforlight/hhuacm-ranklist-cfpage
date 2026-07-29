@@ -24,10 +24,6 @@ function compareNullableNumbers(
   return 0;
 }
 
-export function getUserRowKey(user: RankUser, index: number): string {
-  return user.CFHandle ?? `${user.name}-${user.grade ?? 'unknown'}-${user.major ?? 'unknown'}-${index}`;
-}
-
 export function useRanklistTable(users: RankUser[]) {
   const [selectedGrades, setSelectedGrades] = useState<string[]>([]);
   const [sort, setSort] = useState<RanklistSort>({
@@ -122,7 +118,6 @@ export function useRanklistTable(users: RankUser[]) {
     loadMore,
     resetFilters,
     selectedGrades,
-    sort,
     sortBy,
     toggleGradeFilter,
   };

@@ -25,22 +25,20 @@ export default function UserTable({ initialUsers }: UserTableProps) {
   return (
     <>
       <FilterBar
-        availableGrades={initialUsers.length > 0 ? availableGrades : []}
+        availableGrades={availableGrades}
         onReset={resetFilters}
         onToggleGrade={toggleGradeFilter}
         selectedGrades={selectedGrades}
       />
 
-      {initialUsers.length > 0 && (
-        <div className="overflow-x-auto">
-          <RanklistTable
-            columns={RANKLIST_COLUMNS}
-            getSortOrder={getSortOrder}
-            onSort={sortBy}
-            users={displayedUsers}
-          />
-        </div>
-      )}
+      <div className="overflow-x-auto">
+        <RanklistTable
+          columns={RANKLIST_COLUMNS}
+          getSortOrder={getSortOrder}
+          onSort={sortBy}
+          users={displayedUsers}
+        />
+      </div>
 
       {hasMoreUsers && (
         <div className="text-center mt-6 mb-8">

@@ -23,6 +23,3 @@ export interface RankUser {
   CFHandle: string | null;
   CFinfo: CodeforcesInfo | null;
 }
-
-export type CFInfo = CodeforcesInfo;
-export type User = RankUser;

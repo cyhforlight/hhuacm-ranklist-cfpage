@@ -1,7 +1,6 @@
-import { getUserRowKey } from '@/hooks/useRanklistTable';
+import { cn } from '@/lib/cn';
 import type { SortableCodeforcesField, SortOrder, RankUser } from '@/types';
 import { SortableHeaderCell } from './SortableHeaderCell';
-import { UserTableRow } from './UserTableRow';
 import type { RanklistColumn } from './ranklistColumns';
 
 interface RanklistTableProps {
@@ -9,6 +8,10 @@ interface RanklistTableProps {
   getSortOrder: (key: SortableCodeforcesField) => SortOrder | null;
   onSort: (key: SortableCodeforcesField) => void;
   users: RankUser[];
+}
+
+function getUserRowKey(user: RankUser, index: number): string {
+  return user.CFHandle ?? `${user.name}-${user.grade ?? 'unknown'}-${user.major ?? 'unknown'}-${index}`;
 }
 
 export function RanklistTable({
@@ -36,12 +39,22 @@ export function RanklistTable({
       </thead>
       <tbody>
         {users.map((user, index) => (
-          <UserTableRow
+          <tr
             key={getUserRowKey(user, index)}
-            columns={columns}
-            index={index}
-            user={user}
-          />
+            className="transition-colors even:bg-slate-100/[0.07] hover:bg-primary/5 dark:hover:bg-blue-900/10 [&:last-child>td]:border-b-0"
+          >
+            {columns.map(column => (
+              <td
+                key={column.id}
+                className={cn(
+                  'whitespace-nowrap border-b border-border px-3 py-4 text-center text-base',
+                  column.cellClassName,
+                )}
+              >
+                {column.render(user, index)}
+              </td>
+            ))}
+          </tr>
         ))}
       </tbody>
     </table>
