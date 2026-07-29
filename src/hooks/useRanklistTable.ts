@@ -43,8 +43,8 @@ export function useRanklistTable(users: RankUser[]) {
     const filteredUsers = gradeSet.size > 0 ? users.filter(user => user.grade && gradeSet.has(user.grade)) : users;
 
     return [...filteredUsers].sort((a, b) => {
-      const aValue = a.CFinfo?.[sort.key];
-      const bValue = b.CFinfo?.[sort.key];
+      const aValue = a.codeforces?.[sort.key];
+      const bValue = b.codeforces?.[sort.key];
 
       return compareNullableNumbers(aValue, bValue, sort.order);
     });

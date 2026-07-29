@@ -2,17 +2,16 @@ export type SortOrder = 'asc' | 'desc';
 
 export type SortableCodeforcesField =
   | 'rating'
-  | 'maxrating'
+  | 'maxRating'
   | 'acceptedProblemCount'
-  | 'acceptedProblemCountinMonth'
+  | 'acceptedProblemCountInMonth'
   | 'lastOnlineTimeSeconds';
 
-export interface CodeforcesInfo {
-  handle: string;
+export interface CodeforcesStats {
   rating: number | null;
-  maxrating: number | null;
+  maxRating: number | null;
   acceptedProblemCount: number | null;
-  acceptedProblemCountinMonth: number | null;
+  acceptedProblemCountInMonth: number | null;
   lastOnlineTimeSeconds: number | null;
 }
 
@@ -20,6 +19,6 @@ export interface RankUser {
   name: string;
   grade: string | null;
   major: string | null;
-  CFHandle: string | null;
-  CFinfo: CodeforcesInfo | null;
+  cfHandle: string | null;
+  codeforces: CodeforcesStats | null;
 }

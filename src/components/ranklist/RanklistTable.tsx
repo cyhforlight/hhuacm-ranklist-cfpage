@@ -11,7 +11,7 @@ interface RanklistTableProps {
 }
 
 function getUserRowKey(user: RankUser, index: number): string {
-  return user.CFHandle ?? `${user.name}-${user.grade ?? 'unknown'}-${user.major ?? 'unknown'}-${index}`;
+  return user.cfHandle ?? `${user.name}-${user.grade ?? 'unknown'}-${user.major ?? 'unknown'}-${index}`;
 }
 
 export function RanklistTable({
@@ -21,8 +21,8 @@ export function RanklistTable({
   users,
 }: RanklistTableProps) {
   return (
-    <table className="w-full table-auto border-separate border-spacing-0 overflow-hidden rounded-xl border border-border bg-[var(--card-bg)] shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] backdrop-blur-md">
-      <thead className="sticky top-0 z-10 bg-[var(--header-bg)] backdrop-blur-md">
+    <table className="w-full table-auto border-separate border-spacing-0 overflow-hidden rounded-xl border border-border bg-(--card-bg) shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] backdrop-blur-md">
+      <thead className="sticky top-0 z-10 bg-(--header-bg) backdrop-blur-md">
         <tr>
           {columns.map(column => (
             <SortableHeaderCell

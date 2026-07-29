@@ -17,7 +17,7 @@ export function FilterBar({
 
   return (
     <section
-      className="mb-12 rounded-xl border border-border bg-[var(--card-bg)] px-5 py-3 shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] backdrop-blur-md"
+      className="mb-12 rounded-xl border border-border bg-(--card-bg) px-5 py-3 shadow-[0_2px_10px_-2px_rgba(0,0,0,0.05)] backdrop-blur-md"
       aria-label="年级筛选"
     >
       <div className="flex flex-wrap items-center gap-2">

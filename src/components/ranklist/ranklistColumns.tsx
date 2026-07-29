@@ -51,19 +51,19 @@ export const RANKLIST_COLUMNS: RanklistColumn[] = [
     id: 'cf-handle',
     label: 'CF账号',
     render: user => (
-      user.CFHandle ? (
+      user.cfHandle ? (
         <a
           className={cn(
             'mono-text font-semibold no-underline transition-opacity hover:opacity-80',
-            user.CFinfo?.rating === null || user.CFinfo?.rating === undefined
+            user.codeforces?.rating === null || user.codeforces?.rating === undefined
               ? 'CF_text-gray'
               : undefined,
           )}
-          href={`https://codeforces.com/profile/${user.CFHandle}`}
+          href={`https://codeforces.com/profile/${user.cfHandle}`}
           rel="noopener noreferrer"
           target="_blank"
         >
-          <RatingText rating={user.CFinfo?.rating}>{user.CFHandle}</RatingText>
+          <RatingText rating={user.codeforces?.rating}>{user.cfHandle}</RatingText>
         </a>
       ) : <EmptyValue />
     ),
@@ -72,34 +72,34 @@ export const RANKLIST_COLUMNS: RanklistColumn[] = [
     id: 'rating',
     label: 'Rating',
     sortKey: 'rating',
-    render: user => <RatingText rating={user.CFinfo?.rating} />,
+    render: user => <RatingText rating={user.codeforces?.rating} />,
   },
   {
     id: 'max-rating',
     label: '历史最高Rating',
-    sortKey: 'maxrating',
-    render: user => <RatingText rating={user.CFinfo?.maxrating} />,
+    sortKey: 'maxRating',
+    render: user => <RatingText rating={user.codeforces?.maxRating} />,
   },
   {
     id: 'accepted',
     label: 'AC题数',
     sortKey: 'acceptedProblemCount',
     cellClassName: 'mono-text font-semibold',
-    render: user => renderDataValue(user.CFinfo?.acceptedProblemCount),
+    render: user => renderDataValue(user.codeforces?.acceptedProblemCount),
   },
   {
     id: 'accepted-month',
     label: '1个月内AC题数',
-    sortKey: 'acceptedProblemCountinMonth',
+    sortKey: 'acceptedProblemCountInMonth',
     cellClassName: 'mono-text font-semibold',
-    render: user => renderDataValue(user.CFinfo?.acceptedProblemCountinMonth),
+    render: user => renderDataValue(user.codeforces?.acceptedProblemCountInMonth),
   },
   {
     id: 'last-online',
     label: '最近活跃时间',
     sortKey: 'lastOnlineTimeSeconds',
     render: user => {
-      const lastOnlineTimeSeconds = user.CFinfo?.lastOnlineTimeSeconds;
+      const lastOnlineTimeSeconds = user.codeforces?.lastOnlineTimeSeconds;
       if (!lastOnlineTimeSeconds) return <EmptyValue />;
 
       return (

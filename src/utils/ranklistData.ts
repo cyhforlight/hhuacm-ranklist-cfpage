@@ -1,4 +1,4 @@
-import { CodeforcesInfo, RankUser } from '../types';
+import type { CodeforcesStats, RankUser } from '../types';
 
 const EMPTY_MARK = '—';
 
@@ -31,26 +31,30 @@ function toOptionalNumber(value: unknown): number | null {
   return null;
 }
 
-function normalizeCodeforcesInfo(value: unknown, fallbackHandle: string | null): CodeforcesInfo | null {
+function normalizeCodeforcesStats(value: unknown): CodeforcesStats | null {
   if (!isRecord(value)) return null;
 
-  const handle = toOptionalString(value.handle) ?? fallbackHandle;
   const rating = toOptionalNumber(value.rating);
-  const maxrating = toOptionalNumber(value.maxrating);
+  const maxRating = toOptionalNumber(value.maxrating);
   const acceptedProblemCount = toOptionalNumber(value.acceptedProblemCount);
-  const acceptedProblemCountinMonth = toOptionalNumber(value.acceptedProblemCountinMonth);
+  const acceptedProblemCountInMonth = toOptionalNumber(value.acceptedProblemCountinMonth);
   const lastOnlineTimeSeconds = toOptionalNumber(value.lastOnlineTimeSeconds);
 
-  if (!handle && rating === null && maxrating === null && lastOnlineTimeSeconds === null) {
+  if (
+    rating === null &&
+    maxRating === null &&
+    acceptedProblemCount === null &&
+    acceptedProblemCountInMonth === null &&
+    lastOnlineTimeSeconds === null
+  ) {
     return null;
   }
 
   return {
-    handle: handle ?? '',
     rating,
-    maxrating,
+    maxRating,
     acceptedProblemCount,
-    acceptedProblemCountinMonth,
+    acceptedProblemCountInMonth,
     lastOnlineTimeSeconds,
   };
 }
@@ -58,8 +62,8 @@ function normalizeCodeforcesInfo(value: unknown, fallbackHandle: string | null):
 function normalizeRankUser(value: unknown): RankUser | null {
   if (!isRecord(value)) return null;
 
-  const CFHandle = toOptionalString(value.CFHandle);
-  const name = toOptionalString(value.name) ?? CFHandle;
+  const cfHandle = toOptionalString(value.CFHandle);
+  const name = toOptionalString(value.name) ?? cfHandle;
 
   if (!name) return null;
 
@@ -67,8 +71,8 @@ function normalizeRankUser(value: unknown): RankUser | null {
     name,
     grade: toOptionalString(value.grade),
     major: toOptionalString(value.major),
-    CFHandle,
-    CFinfo: normalizeCodeforcesInfo(value.CFinfo, CFHandle),
+    cfHandle,
+    codeforces: normalizeCodeforcesStats(value.CFinfo),
   };
 }
 
